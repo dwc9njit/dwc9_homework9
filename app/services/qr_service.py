@@ -46,18 +46,26 @@ def generate_qr_code(data: str, path: Path, fill_color: str = 'red', back_color:
         logging.error(f"Failed to generate/save QR code: {e}")
         raise
 
-def delete_qr_cde(file_path: Path):
+def delete_qr_code(file_path: Path) -> bool:
     """
     Deletes the specified QR code image file.
     Parameters:
     - file_path (Path): The filesystem path of the QR code image to delete.
+    
+    Returns:
+    - bool: True if the file was successfully deleted, False otherwise.
     """
-    if file_path.is_file():
-        file_path.unlink()  # Delete the file
-        logging.info(f"QR code {file_path.name} deleted successfully")
-    else:
-        logging.error(f"QR code {file_path.name} not found for deletion")
-        raise FileNotFoundError(f"QR code {file_path.name} not found")
+    try:
+        if file_path.is_file():
+            file_path.unlink()  # Delete the file
+            logging.info(f"QR code {file_path.name} deleted successfully")
+            return True
+        else:
+            logging.error(f"QR code {file_path.name} not found for deletion")
+            raise FileNotFoundError(f"QR code {file_path.name} not found")
+    except Exception as e:
+        logging.error(f"Error occurred while deleting QR code: {e}")
+        raise
 
 def create_directory(directory_path: Path):
     """
@@ -68,6 +76,7 @@ def create_directory(directory_path: Path):
     logging.debug('Attempting to create directory')
     try:
         directory_path.mkdir(parents=True, exist_ok=True)  # Create the directory and any parent directories
+        logging.info(f"Directory created or already exists: {directory_path}")
     except FileExistsError:
         logging.info(f"Directory already exists: {directory_path}")
     except PermissionError as e:
