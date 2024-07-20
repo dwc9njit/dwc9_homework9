@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.10.12] # Define Python versions here
+        python-version: [3.10.12]
     steps:
       - uses: actions/checkout@v4
       
@@ -41,7 +41,7 @@ jobs:
   build-and-push-docker:
     needs: test
     runs-on: ubuntu-latest
-    #environment: production
+    environment: production
     steps:
       - uses: actions/checkout@v4
       
@@ -58,8 +58,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: dwc9/qr_code_api_broken:${{ github.sha }} # Uses the Git SHA for tagging
-          platforms: linux/amd64,linux/arm64 # Multi-platform support
+          tags: dwc9/qr_code_api_broken:${{ github.sha }}
+          platforms: linux/amd64,linux/arm64
           cache-from: type=registry,ref=dwc9/qr_code_api_broken:cache
           cache-to: type=inline,mode=max
           
@@ -68,6 +68,6 @@ jobs:
         with:
           image-ref: 'dwc9/qr_code_api_broken:${{ github.sha }}'
           format: 'table'
-          exit-code: '1' # Fail the job if vulnerabilities are found
+          exit-code: '1'
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
